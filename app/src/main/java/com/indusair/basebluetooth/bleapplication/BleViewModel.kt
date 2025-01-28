@@ -8,7 +8,6 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,7 +22,7 @@ import java.util.*
 
 
 @SuppressLint("MissingPermission")
-class BluetoothViewModel (application: Application) : AndroidViewModel(application) {
+class BluetoothViewModel(application: Application) : AndroidViewModel(application) {
 
     private val bleManager = MyBleManager(application)
 
@@ -36,7 +35,7 @@ class BluetoothViewModel (application: Application) : AndroidViewModel(applicati
             try {
                 val deviceToConnect = devices.value.find { it.address == "A0:A3:B3:2B:09:72" }
 
-                if (deviceToConnect == null){
+                if (deviceToConnect == null) {
                     return@launch
                 }
                 Log.d(TAG, "Intentando conectar con: $deviceToConnect")
@@ -51,8 +50,8 @@ class BluetoothViewModel (application: Application) : AndroidViewModel(applicati
                                 "Notificado"
                             )
                             _notifications.value = String(data.value!!)
-                            if (_notifications.value!="")
-                                bleManager.disableNotification()
+                            if (_notifications.value != "")
+                                bleManager.disableNotifications()
 
                         }
                     }.fail { device, status ->
@@ -73,6 +72,7 @@ class BluetoothViewModel (application: Application) : AndroidViewModel(applicati
             }
         }
     }
+
     // --- Constantes ---
     private val TAG = "BluetoothViewModel"
 
@@ -145,11 +145,10 @@ class BluetoothViewModel (application: Application) : AndroidViewModel(applicati
     /**
      * Conecta al dispositivo BLE especificado por su dirección MAC.
      */
-    fun connectToDevice( macAddress: String) {
-
-            viewModelScope.launch {
-                connectAndSubscribe(macAddress, UUID.fromString("6216b086-e6d8-4f68-8891-87c9ea36fa5"))
-            }
+    fun connectToDevice(macAddress: String) {
+        viewModelScope.launch {
+            connectAndSubscribe(macAddress, UUID.fromString("6216b086-e6d8-4f68-8891-87c9ea36fa5"))
+        }
 
     }
 
